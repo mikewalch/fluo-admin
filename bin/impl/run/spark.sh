@@ -16,32 +16,13 @@
 
 source "$UNO_HOME"/bin/impl/util.sh
 
-verify_exist_hash "$SPARK_TARBALL" "$SPARK_HASH"
-
-if [[ ! -d "$HADOOP_HOME" ]]; then
-  print_to_console "Apache Hadoop needs to be setup before Apache Spark can be setup."
-  exit 1
-fi
-
-print_to_console "Setting up Apache Spark at $SPARK_HOME"
-
 pkill -f org.apache.spark.deploy.history.HistoryServer
 
 # stop if any command fails
 set -e
 
-rm -rf "$INSTALL"/spark-*
-rm -f "$LOGS_DIR"/spark/*
-rm -rf "$DATA_DIR"/spark
-mkdir -p "$LOGS_DIR"/spark
-mkdir -p "$DATA_DIR"/spark/events
-
-tar xzf "$DOWNLOADS/$SPARK_TARBALL" -C "$INSTALL"
-
-cp "$UNO_HOME"/conf/spark/* "$SPARK_HOME"/conf
-$SED "s#DATA_DIR#$DATA_DIR#g" "$SPARK_HOME"/conf/spark-defaults.conf
-$SED "s#LOGS_DIR#$LOGS_DIR#g" "$SPARK_HOME"/conf/spark-defaults.conf
-
 export SPARK_LOG_DIR=$LOGS_DIR/spark
 "$SPARK_HOME"/sbin/start-history-server.sh
 
+print_to_console "Apache Spark History Server is running"
+print_to_console "  * view at http://localhost:18080/"

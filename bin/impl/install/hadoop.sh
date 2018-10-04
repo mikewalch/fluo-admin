@@ -24,16 +24,7 @@ set -e
 
 verify_exist_hash "$HADOOP_TARBALL" "$HADOOP_HASH"
 
-namenode_port=9870
-if [[ $HADOOP_VERSION =~ ^2\..*$ ]]; then
-  namenode_port=50070
-  export HADOOP_PREFIX=$HADOOP_HOME
-fi
-
-print_to_console "Setting up Apache Hadoop $HADOOP_VERSION at $HADOOP_HOME"
-print_to_console "    * NameNode status: http://localhost:$namenode_port/"
-print_to_console "    * ResourceManager status: http://localhost:8088/"
-print_to_console "    * view logs at $HADOOP_LOG_DIR"
+print_to_console "Installing Apache Hadoop $HADOOP_VERSION at $HADOOP_HOME"
 
 rm -rf "$INSTALL"/hadoop-*
 rm -rf "$HADOOP_LOG_DIR"/*
@@ -63,8 +54,3 @@ echo "export HADOOP_MAPRED_HOME=$HADOOP_HOME" >> "$hadoop_conf/hadoop-env.sh"
 if [[ $HADOOP_VERSION =~ ^2\..*$ ]]; then
   echo "export YARN_LOG_DIR=$HADOOP_LOG_DIR" >> "$hadoop_conf/yarn-env.sh"
 fi
-
-"$HADOOP_HOME"/bin/hdfs namenode -format
-"$HADOOP_HOME"/sbin/start-dfs.sh
-"$HADOOP_HOME"/sbin/start-yarn.sh
-

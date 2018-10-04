@@ -142,8 +142,7 @@ fluo-yarn)
     fi
     cp "$built_tarball" "$DOWNLOADS"/
   else
-    [[ $FLUO_VERSION =~ .*-incubating ]] && apache_mirror="${apache_mirror}/incubator"
-    download_apache "fluo/fluo/$FLUO_VERSION" "$FLUO_TARBALL" "$FLUO_HASH"
+    download_apache "fluo/fluo-yarn/$FLUO_YARN_VERSION" "$FLUO_YARN_TARBALL" "$FLUO_YARN_HASH"
   fi
   ;;
 hadoop)

@@ -52,12 +52,36 @@ function check_dirs() {
   done
 }
 
-function run_setup_script() {
-  local SCRIP; SCRIP=$(echo "$1" | tr '[:upper:] ' '[:lower:]-')
-  local L_DIR; L_DIR="$LOGS_DIR/setup"
-  mkdir -p "$L_DIR"
+function run_plugins() {
+  for plugin in $UNO_PLUGINS
+  do
+    echo "Running $plugin plugin"
+    plugin_script="${UNO_HOME}/plugins/${plugin}.sh"
+    if [[ ! -f "$plugin_script" ]]; then
+      echo "Plugin does not exist: $plugin_script"
+      exit 1
+    fi
+    $plugin_script
+  done  
+}
+
+function install_component() {
+  local component; component=$(echo "$1" | tr '[:upper:] ' '[:lower:]-')
   shift
-  "$UNO_HOME/bin/impl/setup-$SCRIP.sh" "$@" 1>"$L_DIR/$SCRIP.stdout" 2>"$L_DIR/$SCRIP.stderr"
+  "$UNO_HOME/bin/impl/install/$component.sh" "$@"
+}
+
+function run_component() {
+  local component; component=$(echo "$1" | tr '[:upper:] ' '[:lower:]-')
+  local logs; logs="$LOGS_DIR/setup"
+  mkdir -p "$logs"
+  shift
+  "$UNO_HOME/bin/impl/run/$component.sh" "$component" "$@" 1>"$logs/${component}.out" 2>"$logs/${component}.err"
+}
+
+function setup_component() {
+  install_component $1
+  run_component $1
 }
 
 function save_console_fd {

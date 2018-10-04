@@ -24,7 +24,7 @@ if [[ -z "$FLUO_REPO" ]]; then
 fi
 
 if [[ $1 != "--no-deps" ]]; then
-  run_setup_script Accumulo
+  install_component Accumulo
 fi
 
 if [[ -f "$DOWNLOADS/$FLUO_TARBALL" ]]; then

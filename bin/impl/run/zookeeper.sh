@@ -21,20 +21,11 @@ pkill -f QuorumPeerMain
 # stop if any command fails
 set -e
 
-verify_exist_hash "$ZOOKEEPER_TARBALL" "$ZOOKEEPER_HASH"
-
-print_to_console "Setting up Apache ZooKeeper $ZOOKEEPER_VERSION at $ZOOKEEPER_HOME"
-print_to_console "    * view logs at $ZOO_LOG_DIR"
-
-rm -rf "$INSTALL"/zookeeper-*
 rm -f "$ZOO_LOG_DIR"/*
+rm -rf "$DATA_DIR"/zookeeper
 mkdir -p "$ZOO_LOG_DIR"
 
-tar xzf "$DOWNLOADS/$ZOOKEEPER_TARBALL" -C "$INSTALL"
-
-cp "$UNO_HOME"/conf/zookeeper/* "$ZOOKEEPER_HOME"/conf/
-$SED "s#DATA_DIR#$DATA_DIR#g" "$ZOOKEEPER_HOME"/conf/zoo.cfg
-
-rm -rf "$DATA_DIR"/zookeeper
 "$ZOOKEEPER_HOME"/bin/zkServer.sh start
 
+print_to_console "Apache ZooKeeper $ZOOKEEPER_VERSION is running"
+print_to_console "    * view logs at $ZOO_LOG_DIR"
